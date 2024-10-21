@@ -34,8 +34,9 @@ import math
 # Constants
 GRAVITY = 9.81  # m/s^2 (can be changed by the user)
 FPS = 60  # Frame rate
-SCREEN_WIDTH, SCREEN_HEIGHT = 900, 600  # Screen dimensions
+SCREEN_WIDTH, SCREEN_HEIGHT = 1200, 600  # Screen dimensions
 GROUND_LEVEL = SCREEN_HEIGHT - 100  # Ground y-coordinate
+SCALE_FACTOR = 5
 
 # Colors
 WHITE = (255, 255, 255)
@@ -61,9 +62,9 @@ class Projectile:
         """Update the projectile's position and velocity."""
         if self.in_motion:
             self.time += dt
-            self.vy += self.gravity * dt * 100  # Gravity acts on vy, scaled for pixels
-            self.x += self.vx * dt * 100  # Multiply by 100 to convert seconds to pixels
-            self.y += self.vy * dt * 100
+            self.vy += self.gravity * dt * SCALE_FACTOR  # Gravity acts on vy, scaled for pixels
+            self.x += self.vx * dt * SCALE_FACTOR  # Multiply by 100 to convert seconds to pixels
+            self.y += self.vy * dt * SCALE_FACTOR
 
             # Store trajectory points
             self.trajectory.append((int(self.x), int(self.y)))
@@ -90,7 +91,7 @@ class Projectile:
 # Set up Pygame
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("PhET-Like Projectile Motion Simulation")
+pygame.display.set_caption("Projectile Motion Simulation")
 clock = pygame.time.Clock()
 
 # Fonts
