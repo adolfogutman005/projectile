@@ -70,7 +70,7 @@ class Projectile:
             self.trajectory.append((int(self.x), int(self.y)))
 
             # Stop when hitting the ground
-            if self.y >= GROUND_LEVEL:
+            if self.y >= GROUND_LEVEL:  
                 self.in_motion = False
                 self.y = GROUND_LEVEL  # Clamp y to ground level
 
@@ -78,6 +78,7 @@ class Projectile:
         """Reset the projectile's initial conditions."""
         self.__init__(x, y, velocity, angle, gravity)
 
+        
     def draw(self, screen):
         """Draw the projectile and its trajectory."""
         # Draw trajectory
@@ -163,11 +164,11 @@ while running:
     # Display real-time values (angle, velocity, gravity)
     angle_text = font.render(f"Angle: {initial_angle} degrees", True, BLACK)
     velocity_text = font.render(f"Velocity: {initial_velocity} m/s", True, BLACK)
-    gravity_text = font.render(f"Gravity: {gravity:.1f} m/s^2", True, BLACK)
+    time_text = font.render(f"Time: {projectile.time:.2f} s", True, BLACK)
     
     screen.blit(angle_text, (10, 10))
     screen.blit(velocity_text, (10, 40))
-    screen.blit(gravity_text, (10, 70))
+    screen.blit(time_text, (10, 70))
 
     pygame.display.flip()  # Update display
 
