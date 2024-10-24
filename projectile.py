@@ -65,10 +65,10 @@ class Projectile:
         """Update the projectile's position and velocity."""
         if self.in_motion:
             self.time += dt
-            self.vy += self.gravity * dt * SCALE_FACTOR  # Gravity acts on vy, scaled for pixels
+            self.vy += self.gravity * dt  # Gravity acts on vy, scaled for pixels
             self.x += self.vx * dt * SCALE_FACTOR  # Multiply by 100 to convert seconds to pixels
             self.y += self.vy * dt * SCALE_FACTOR
-            self.distance = (self.x - self.x0) 
+            self.distance = (self.x - self.x0) / SCALE_FACTOR
 
             # Store trajectory points
             self.trajectory.append((int(self.x), int(self.y)))
