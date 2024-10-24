@@ -171,11 +171,13 @@ while running:
     velocity_text = font.render(f"Velocity: {initial_velocity} m/s", True, BLACK)
     time_text = font.render(f"Time: {projectile.time:.2f} s", True, BLACK)
     distance_text = font.render(f"Distance: {projectile.distance:.2f} meters", True, BLACK)
+    gravity_text = font.render(f"Gravity: {projectile.gravity} m/s", True, BLACK)
     
     screen.blit(angle_text, (10, 10))
     screen.blit(velocity_text, (10, 40))
     screen.blit(time_text, (10, 70))
     screen.blit(distance_text, (10, 100))
+    screen.blit(gravity_text, (10, 130))
 
     pygame.display.flip()  # Update display
 
