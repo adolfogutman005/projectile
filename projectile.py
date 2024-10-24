@@ -46,9 +46,10 @@ BLUE = (0, 0, 255)
 
 # Projectile class
 class Projectile:
-    def __init__(self, x, y, velocity, angle, gravity):
-        self.x = x  # Starting x position
-        self.y = y  # Starting y position
+    def __init__(self, x0, y0, velocity, angle, gravity):
+        self.x = x0  # Starting x position
+        self.y = y0  # Starting y position
+        self.x0 = x0 
         self.velocity = velocity  # Initial speed
         self.angle = math.radians(angle)  # Convert angle to radians
         self.vx = self.velocity * math.cos(self.angle)  # Initial velocity in x
@@ -57,6 +58,8 @@ class Projectile:
         self.trajectory = []  # Store trajectory points
         self.time = 0  # Track time in seconds
         self.in_motion = False  # Is the projectile moving?
+        self.distance = 0
+        self.canon = ... 
 
     def update(self, dt):
         """Update the projectile's position and velocity."""
@@ -65,6 +68,7 @@ class Projectile:
             self.vy += self.gravity * dt * SCALE_FACTOR  # Gravity acts on vy, scaled for pixels
             self.x += self.vx * dt * SCALE_FACTOR  # Multiply by 100 to convert seconds to pixels
             self.y += self.vy * dt * SCALE_FACTOR
+            self.distance = (self.x - self.x0) 
 
             # Store trajectory points
             self.trajectory.append((int(self.x), int(self.y)))
@@ -155,6 +159,7 @@ while running:
 
     # Update the projectile's motion
     projectile.update(dt)
+    
 
     # Rendering
     screen.fill(WHITE)  # Clear screen
@@ -165,10 +170,12 @@ while running:
     angle_text = font.render(f"Angle: {initial_angle} degrees", True, BLACK)
     velocity_text = font.render(f"Velocity: {initial_velocity} m/s", True, BLACK)
     time_text = font.render(f"Time: {projectile.time:.2f} s", True, BLACK)
+    distance_text = font.render(f"Distance: {projectile.distance:.2f} meters", True, BLACK)
     
     screen.blit(angle_text, (10, 10))
     screen.blit(velocity_text, (10, 40))
     screen.blit(time_text, (10, 70))
+    screen.blit(distance_text, (10, 100))
 
     pygame.display.flip()  # Update display
 
