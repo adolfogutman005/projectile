@@ -115,6 +115,8 @@ projectile = Projectile(initial_x, initial_y, initial_velocity, initial_angle, g
 launching = False
 running = True
 
+paused = False 
+
 # Main loop
 while running:
     dt = clock.tick(FPS) / 1000  # Delta time in seconds
@@ -156,9 +158,13 @@ while running:
             if event.key == pygame.K_h:
                 gravity += 0.5
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
+            if event.key == pygame.K_p:
+                paused = not paused
+                
 
     # Update the projectile's motion
-    projectile.update(dt)
+    if not paused:
+        projectile.update(dt)
     
 
     # Rendering
