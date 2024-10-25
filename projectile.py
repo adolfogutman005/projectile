@@ -145,10 +145,10 @@ while running:
             
             # Adjust speed with left/right arrow keys
             if event.key == pygame.K_RIGHT:
-                initial_velocity += 10
+                initial_velocity += 1
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
             if event.key == pygame.K_LEFT:
-                initial_velocity = max(10, initial_velocity - 10)  # Min velocity 10 m/s
+                initial_velocity = max(10, initial_velocity - 1)  # Min velocity 10 m/s
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
 
             # Adjust gravity with 'g' and 'h' keys (Optional feature)
