@@ -81,6 +81,7 @@ class Projectile:
     def reset(self, x, y, velocity, angle, gravity):
         """Reset the projectile's initial conditions."""
         self.__init__(x, y, velocity, angle, gravity)
+        
 
         
     def draw(self, screen):
