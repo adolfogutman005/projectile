@@ -61,6 +61,14 @@ class Projectile:
         self.distance = 0
         self.canon = ... 
 
+    @classmethod
+    def standard_values(cls):
+        initial_x, initial_y = 100, GROUND_LEVEL
+        initial_velocity = 25  # m/s
+        initial_angle = 45  # degrees
+        gravity = GRAVITY  # m/s^2
+        return cls(initial_x, initial_y, initial_velocity, initial_angle, gravity)
+    
     def update(self, dt):
         """Update the projectile's position and velocity."""
         if self.in_motion:
@@ -105,7 +113,7 @@ font = pygame.font.SysFont(None, 24)
 
 # Standard initial values
 initial_x, initial_y = 100, GROUND_LEVEL
-initial_velocity = 100  # m/s
+initial_velocity = 25  # m/s
 initial_angle = 45  # degrees
 gravity = GRAVITY  # m/s^2
 
@@ -117,6 +125,10 @@ launching = False
 running = True
 
 paused = False 
+
+button_standard_color = (200, 200, 200)
+button_standrd_hover_color = (150, 150, 150)
+button_standard = pygame.Rect(10, 160, 150, 40)
 
 # Main loop
 while running:
@@ -146,10 +158,10 @@ while running:
             
             # Adjust speed with left/right arrow keys
             if event.key == pygame.K_RIGHT:
-                initial_velocity += 1
+                initial_velocity = min(initial_velocity + 5, 50) 
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
             if event.key == pygame.K_LEFT:
-                initial_velocity = max(10, initial_velocity - 1)  # Min velocity 10 m/s
+                initial_velocity = max(10, initial_velocity - 5)  # Min velocity 10 m/s
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
 
             # Adjust gravity with 'g' and 'h' keys (Optional feature)
@@ -159,8 +171,17 @@ while running:
             if event.key == pygame.K_h:
                 gravity += 0.5
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
+            
+            # Adjust pause button 
             if event.key == pygame.K_p:
                 paused = not paused
+            
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_standard.collidepoint(event.pos):
+                    # Reset to standard values
+                    projectile = Projectile.standard_values()
+            
                 
 
     # Update the projectile's motion
@@ -189,4 +210,3 @@ while running:
     pygame.display.flip()  # Update display
 
 pygame.quit()
-
