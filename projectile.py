@@ -67,6 +67,7 @@ class Projectile:
         initial_velocity = 25  # m/s
         initial_angle = 45  # degrees
         gravity = GRAVITY  # m/s^2
+        print(initial_angle)
         return cls(initial_x, initial_y, initial_velocity, initial_angle, gravity)
     
     def update(self, dt):
@@ -101,6 +102,23 @@ class Projectile:
         # Draw projectile
         pygame.draw.circle(screen, BLACK, (int(self.x), int(self.y)), 5)
 
+class Button:
+    def __init__(self, x, y, width, height, text):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+        self.font = pygame.font.SysFont(None, 24)
+
+    def draw(self, screen):
+        # Draw the button
+        pygame.draw.rect(screen, button_color_current, self.rect)
+        text_surface = self.font.render(self.text, True, BLACK)
+        screen.blit(text_surface, (self.rect.x + 10, self.rect.y + 5))
+
+    def is_clicked(self, pos):
+        return self.rect.collidepoint(pos)
+
+
+
 
 # Set up Pygame
 pygame.init()
@@ -127,13 +145,14 @@ running = True
 paused = False 
 
 button_standard_color = (200, 200, 200)
-button_standrd_hover_color = (150, 150, 150)
+button_standard_hover_color = (150, 150, 150)
 button_standard = pygame.Rect(10, 160, 150, 40)
+button_text = font.render("Standard Values", True, BLACK)
 
 # Main loop
 while running:
     dt = clock.tick(FPS) / 1000  # Delta time in seconds
-
+    mouse_pos = pygame.mouse.get_pos()
     # Events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -177,11 +196,11 @@ while running:
                 paused = not paused
             
             
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if button_standard.collidepoint(event.pos):
-                    # Reset to standard values
-                    projectile = Projectile.standard_values()
-            
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if button_standard.collidepoint(event.pos):
+                # Reset to standard values
+                print("button clicked")
+                projectile = Projectile.standard_values()
                 
 
     # Update the projectile's motion
@@ -193,12 +212,18 @@ while running:
     screen.fill(WHITE)  # Clear screen
     pygame.draw.line(screen, BLACK, (0, GROUND_LEVEL), (SCREEN_WIDTH, GROUND_LEVEL), 2)  # Ground
     projectile.draw(screen)  # Draw projectile and trajectory
+    
+    # Rendering standard values Button 
+    button_color_current = button_standard_hover_color if button_standard.collidepoint(mouse_pos) else button_standard_color
+    pygame.draw.rect(screen, button_color_current, button_standard)
+    screen.blit(button_text, (button_standard.x + 10, button_standard.y + 5))
+    
 
     # Display real-time values (angle, velocity, gravity)
-    angle_text = font.render(f"Angle: {initial_angle} degrees", True, BLACK)
-    velocity_text = font.render(f"Velocity: {initial_velocity} m/s", True, BLACK)
+    angle_text = font.render(f"Angle: {projectile.angle * (180 / math.pi):.0f} degrees", True, BLACK)
+    velocity_text = font.render(f"Velocity: {projectile.velocity} m/s", True, BLACK)
     time_text = font.render(f"Time: {projectile.time:.2f} s", True, BLACK)
-    distance_text = font.render(f"Distance: {projectile.distance:.2f} meters", True, BLACK)
+    distance_text = font.render(f"Distance: {projectile.distance:.1f} meters", True, BLACK)
     gravity_text = font.render(f"Gravity: {projectile.gravity} m/s", True, BLACK)
     
     screen.blit(angle_text, (10, 10))
