@@ -103,6 +103,9 @@ class Projectile:
         pygame.draw.circle(screen, BLACK, (int(self.x), int(self.y)), 5)
 
 class Button:
+    button_standard_color = (200, 200, 200)
+    button_standard_hover_color = (150, 150, 150)
+    
     def __init__(self, x, y, width, height, text):
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
@@ -110,6 +113,7 @@ class Button:
 
     def draw(self, screen):
         # Draw the button
+        button_color_current = button_standard_hover_color if button_standard.collidepoint(mouse_pos) else button_standard_color
         pygame.draw.rect(screen, button_color_current, self.rect)
         text_surface = self.font.render(self.text, True, BLACK)
         screen.blit(text_surface, (self.rect.x + 10, self.rect.y + 5))
