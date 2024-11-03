@@ -152,8 +152,8 @@ angle_plus_button = Button(200, 10, 30, 30, "+")
 angle_minus_button = Button(240, 10, 30, 30, "-")
 velocity_plus_button = Button(200, 40, 30, 30, "+")
 velocity_minus_button = Button(240, 40, 30, 30, "-")
-gravity_plus_button = Button(200, 130, 30, 30, "+")
-gravity_minus_button = Button(240, 130, 30, 30, "-")
+gravity_plus_button = Button(200, 70, 30, 30, "+")
+gravity_minus_button = Button(240, 70, 30, 30, "-")
 
 # Main loop
 while running:
@@ -164,15 +164,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
-        # Reset projectile if 'r' key is pressed
         if event.type == pygame.KEYDOWN:
+            # reset the projectile 
             if event.key == pygame.K_r:
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
-            
             # Shoot the projectile with space bar
             if event.key == pygame.K_SPACE:
                 projectile.in_motion = True
-            
             # Adjust pause button 
             if event.key == pygame.K_p:
                 paused = not paused
@@ -197,8 +195,10 @@ while running:
                 gravity = max(0, gravity - 0.5)
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
             if button_standard.is_clicked(event.pos):
-                print("button clicked")
                 projectile = Projectile.standard_values()
+                initial_angle = 45
+                initial_velocity = 25
+                gravity = GRAVITY
                 
 
     # Update the projectile's motion
@@ -224,15 +224,17 @@ while running:
     # Render Texts 
     angle_text = font.render(f"Angle: {projectile.angle * (180 / math.pi):.0f} degrees", True, BLACK)
     velocity_text = font.render(f"Velocity: {projectile.velocity} m/s", True, BLACK)
+    gravity_text = font.render(f"Gravity: {projectile.gravity:.2f} m/s", True, BLACK)
     time_text = font.render(f"Time: {projectile.time:.2f} s", True, BLACK)
     distance_text = font.render(f"Distance: {projectile.distance:.1f} meters", True, BLACK)
-    gravity_text = font.render(f"Gravity: {projectile.gravity:.2f} m/s", True, BLACK)
     
-    screen.blit(angle_text, (10, 10))
-    screen.blit(velocity_text, (10, 40))
-    screen.blit(time_text, (10, 70))
-    screen.blit(distance_text, (10, 100))
-    screen.blit(gravity_text, (10, 130))
+    # Buttons Text
+    screen.blit(angle_text, (10, 20))
+    screen.blit(velocity_text, (10, 50))
+    screen.blit(gravity_text, (10, 80))
+    # Info text
+    screen.blit(time_text, (1025, 10))
+    screen.blit(distance_text, (1025, 40))
 
     pygame.display.flip()  # Update display
 
