@@ -223,18 +223,21 @@ while running:
 
     # Render Texts 
     angle_text = font.render(f"Angle: {projectile.angle * (180 / math.pi):.0f} degrees", True, BLACK)
-    velocity_text = font.render(f"Velocity: {projectile.velocity} m/s", True, BLACK)
+    initial_velocity_text = font.render(f"Initial Velocity: {projectile.velocity} m/s", True, BLACK)
     gravity_text = font.render(f"Gravity: {projectile.gravity:.2f} m/s", True, BLACK)
     time_text = font.render(f"Time: {projectile.time:.2f} s", True, BLACK)
     distance_text = font.render(f"Distance: {projectile.distance:.1f} meters", True, BLACK)
+    velocity_text = font.render(f"Velocity: {-projectile.vy:.1f} m/s", True, BLACK)
+    
     
     # Buttons Text
     screen.blit(angle_text, (10, 20))
-    screen.blit(velocity_text, (10, 50))
+    screen.blit(initial_velocity_text, (10, 50))
     screen.blit(gravity_text, (10, 80))
     # Info text
     screen.blit(time_text, (1025, 10))
     screen.blit(distance_text, (1025, 40))
+    screen.blit(velocity_text, (1025, 70))
 
     pygame.display.flip()  # Update display
 
