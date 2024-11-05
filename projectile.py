@@ -57,7 +57,7 @@ launching = False
 running = True
 paused = False 
 recorded_trajectories = []
-record_current_trajectory = False
+
 
 # Projectile class
 class Projectile:
@@ -75,7 +75,8 @@ class Projectile:
         self.in_motion = False  # Is the projectile moving?
         self.distance = 0
         self.canon = ... 
-
+        self.record_current_trajectory = False
+    
     @classmethod
     def standard_values(cls):
         initial_x, initial_y = 100, GROUND_LEVEL
@@ -85,7 +86,7 @@ class Projectile:
         print(initial_angle)
         return cls(initial_x, initial_y, initial_velocity, initial_angle, gravity)
     
-    def update(self, dt, record_current_trajectory):
+    def update(self, dt):
         """Update the projectile's position and velocity."""
         if self.in_motion:
             self.time += dt
@@ -101,14 +102,15 @@ class Projectile:
             if self.y >= GROUND_LEVEL:  
                 self.in_motion = False
                 self.y = GROUND_LEVEL  # Clamp y to ground level
-                if record_current_trajectory:
+                if self.record_current_trajectory:
                     recorded_trajectories.append({
                     "trajectory": list(self.trajectory),  # Copy of trajectory points
                     "initial_velocity": self.velocity,
                     "angle": math.degrees(self.angle),  # Convert angle back to degrees for clarity
                     "gravity": self.gravity
                 })
-                    record_current_trajectory = False  # Reset recording flag
+                self.record_current_trajectory = False  # Reset recording flag
+                
 
 
     def reset(self, x, y, velocity, angle, gravity):
@@ -213,18 +215,24 @@ while running:
                 initial_velocity = 25
                 gravity = GRAVITY
             if record_button.is_clicked(event.pos):
-                record_current_trajectory = True
+                projectile.record_current_trajectory = True
                 
 
     # Update the projectile's motion
     if not paused:
-        projectile.update(dt, record_current_trajectory)
+        projectile.update(dt)
     
 
     # Rendering Projectile 
     screen.fill(WHITE)  # Clear screen
     pygame.draw.line(screen, BLACK, (0, GROUND_LEVEL), (SCREEN_WIDTH, GROUND_LEVEL), 2)  # Ground
     projectile.draw(screen)  # Draw projectile and trajectory
+    
+    # Rendering trajectories
+    for record in recorded_trajectories:
+        for point in record["trajectory"]:
+            pygame.draw.circle(screen, BLUE, point, 2)  # Use a different color for recorded trajectories
+
     
     # Rendering buttons 
     button_standard.draw()
