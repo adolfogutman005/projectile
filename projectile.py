@@ -52,6 +52,13 @@ pygame.display.set_caption("Projectile Motion Simulation")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 24)
 
+# UI elements
+launching = False
+running = True
+paused = False 
+recorded_trajectories = []
+record_current_trajectory = False
+
 # Projectile class
 class Projectile:
     def __init__(self, x0, y0, velocity, angle, gravity):
@@ -78,7 +85,7 @@ class Projectile:
         print(initial_angle)
         return cls(initial_x, initial_y, initial_velocity, initial_angle, gravity)
     
-    def update(self, dt):
+    def update(self, dt, record_current_trajectory):
         """Update the projectile's position and velocity."""
         if self.in_motion:
             self.time += dt
@@ -94,6 +101,15 @@ class Projectile:
             if self.y >= GROUND_LEVEL:  
                 self.in_motion = False
                 self.y = GROUND_LEVEL  # Clamp y to ground level
+                if record_current_trajectory:
+                    recorded_trajectories.append({
+                    "trajectory": list(self.trajectory),  # Copy of trajectory points
+                    "initial_velocity": self.velocity,
+                    "angle": math.degrees(self.angle),  # Convert angle back to degrees for clarity
+                    "gravity": self.gravity
+                })
+                    record_current_trajectory = False  # Reset recording flag
+
 
     def reset(self, x, y, velocity, angle, gravity):
         """Reset the projectile's initial conditions."""
@@ -141,10 +157,6 @@ gravity = GRAVITY  # m/s^2
 # Create the projectile
 projectile = Projectile(initial_x, initial_y, initial_velocity, initial_angle, gravity)
 
-# UI elements
-launching = False
-running = True
-paused = False 
 
 # defining buttons 
 button_standard = Button(10, 160, 150, 40, "Standard Values")
@@ -154,6 +166,7 @@ velocity_plus_button = Button(200, 40, 30, 30, "+")
 velocity_minus_button = Button(240, 40, 30, 30, "-")
 gravity_plus_button = Button(200, 70, 30, 30, "+")
 gravity_minus_button = Button(240, 70, 30, 30, "-")
+record_button = Button(10, 200, 150, 40, "Record Trajectory")
 
 # Main loop
 while running:
@@ -199,11 +212,13 @@ while running:
                 initial_angle = 45
                 initial_velocity = 25
                 gravity = GRAVITY
+            if record_button.is_clicked(event.pos):
+                record_current_trajectory = True
                 
 
     # Update the projectile's motion
     if not paused:
-        projectile.update(dt)
+        projectile.update(dt, record_current_trajectory)
     
 
     # Rendering Projectile 
@@ -219,6 +234,7 @@ while running:
     velocity_minus_button.draw()
     gravity_plus_button.draw()
     gravity_minus_button.draw()
+    record_button.draw()
         
 
     # Render Texts 
