@@ -102,15 +102,6 @@ class Projectile:
             if self.y >= GROUND_LEVEL:  
                 self.in_motion = False
                 self.y = GROUND_LEVEL  # Clamp y to ground level
-                if self.record_current_trajectory:
-                    recorded_trajectories.append({
-                    "trajectory": list(self.trajectory),  # Copy of trajectory points
-                    "initial_velocity": self.velocity,
-                    "angle": math.degrees(self.angle),  # Convert angle back to degrees for clarity
-                    "gravity": self.gravity
-                })
-                self.record_current_trajectory = False  # Reset recording flag
-                
 
 
     def reset(self, x, y, velocity, angle, gravity):
@@ -169,6 +160,7 @@ velocity_minus_button = Button(240, 40, 30, 30, "-")
 gravity_plus_button = Button(200, 70, 30, 30, "+")
 gravity_minus_button = Button(240, 70, 30, 30, "-")
 record_button = Button(10, 200, 150, 40, "Record Trajectory")
+clean_button = Button(10, 240, 150, 40, "Clean Trajectories")
 
 # Main loop
 while running:
@@ -216,12 +208,23 @@ while running:
                 gravity = GRAVITY
             if record_button.is_clicked(event.pos):
                 projectile.record_current_trajectory = True
+            if clean_button.is_clicked(event.pos):
+                recorded_trajectories.clear()
+            
                 
 
     # Update the projectile's motion
     if not paused:
         projectile.update(dt)
     
+    if not projectile.in_motion and projectile.record_current_trajectory:
+        recorded_trajectories.append({
+            "trajectory": list(projectile.trajectory),
+            "initial_velocity": projectile.velocity,
+            "angle": math.degrees(projectile.angle),
+            "gravity": projectile.gravity
+        })
+        projectile.record_current_trajectory = False  # Reset the recording fla
 
     # Rendering Projectile 
     screen.fill(WHITE)  # Clear screen
@@ -243,7 +246,7 @@ while running:
     gravity_plus_button.draw()
     gravity_minus_button.draw()
     record_button.draw()
-        
+    clean_button.draw()
 
     # Render Texts 
     angle_text = font.render(f"Angle: {projectile.angle * (180 / math.pi):.0f} degrees", True, BLACK)
