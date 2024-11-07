@@ -162,6 +162,9 @@ gravity_minus_button = Button(240, 70, 30, 30, "-")
 record_button = Button(10, 200, 150, 40, "Record Trajectory")
 clean_button = Button(10, 240, 150, 40, "Clean Trajectories")
 
+def is_point_near(point1, point2, distance_threshold=10):
+    return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2) <= distance_threshold
+
 # Main loop
 while running:
     dt = clock.tick(FPS) / 1000  # Delta time in seconds
@@ -210,19 +213,27 @@ while running:
                 projectile.record_current_trajectory = True
             if clean_button.is_clicked(event.pos):
                 recorded_trajectories.clear()
-            
+            for record in recorded_trajectories:
+                # check if the user wants to show/hide information
+                endpoint = record["trajectory"][-1]
+                if is_point_near(mouse_pos, endpoint):
+                    # Toggle the display information flag
+                    record["showing_information"] = not record["showing_information"]
+
                 
 
     # Update the projectile's motion
     if not paused:
         projectile.update(dt)
     
+    # Save trajectory if button is clicked 
     if not projectile.in_motion and projectile.record_current_trajectory:
         recorded_trajectories.append({
             "trajectory": list(projectile.trajectory),
             "initial_velocity": projectile.velocity,
             "angle": math.degrees(projectile.angle),
-            "gravity": projectile.gravity
+            "gravity": projectile.gravity,
+            "showing_information": False
         })
         projectile.record_current_trajectory = False  # Reset the recording fla
 
@@ -235,7 +246,13 @@ while running:
     for record in recorded_trajectories:
         for point in record["trajectory"]:
             pygame.draw.circle(screen, BLUE, point, 2)  # Use a different color for recorded trajectories
-
+        
+        if record["showing_information"]:
+            # Render and display the information only if showing_information is True
+            endpoint = record["trajectory"][-1]
+            info_text = f"Velocity: {record['initial_velocity']} m/s, Angle: {record['angle']:.1f}°, Gravity: {record['gravity']:.2f} m/s²"
+            text_surface = font.render(info_text, True, BLACK)
+            screen.blit(text_surface, (endpoint[0] + 10, endpoint[1] - 20))
     
     # Rendering buttons 
     button_standard.draw()
