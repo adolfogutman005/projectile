@@ -215,10 +215,11 @@ while running:
                 recorded_trajectories.clear()
             for record in recorded_trajectories:
                 # check if the user wants to show/hide information
-                endpoint = record["trajectory"][-1]
-                if is_point_near(mouse_pos, endpoint):
-                    # Toggle the display information flag
-                    record["showing_information"] = not record["showing_information"]
+                if record["trajectory"]:
+                    endpoint = record["trajectory"][-1]
+                    if is_point_near(mouse_pos, endpoint):
+                        # Toggle the display information flag
+                        record["showing_information"] = not record["showing_information"]
 
                 
 
