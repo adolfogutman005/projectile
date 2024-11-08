@@ -57,6 +57,7 @@ launching = False
 running = True
 paused = False 
 recorded_trajectories = []
+selected_trajectories = []
 
 
 # Projectile class
@@ -165,6 +166,46 @@ clean_button = Button(10, 240, 150, 40, "Clean Trajectories")
 def is_point_near(point1, point2, distance_threshold=10):
     return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2) <= distance_threshold
 
+# Function to render selected projectiles' information in the right sidebar
+
+def render_sidebar_information(screen, font, selected_trajectories):
+    x = SCREEN_WIDTH - 250  # Starting x position on the right side
+    y = 50  # Starting y position
+
+    for idx, record in enumerate(selected_trajectories):
+        record = selected_trajectories[idx]
+        
+        # Render endpoint label (e.g., "Projectile N") near the endpoint
+        endpoint = record["trajectory"][-1]
+        label_text = f"Proj: {idx + 1}"
+        label_surface = font.render(label_text, True, BLACK)
+        screen.blit(label_surface, (endpoint[0] + 10, endpoint[1] - 15))  # Offset to avoid overlap
+        
+        # Render the title of the projectile
+        title_text = f"Projectile {idx + 1}"
+        title_surface = font.render(title_text, True, BLACK)
+        screen.blit(title_surface, (x, y))
+        y += title_surface.get_height() + 5
+        
+        # Render initial velocity
+        velocity_text = f"Velocity: {record['initial_velocity']} m/s"
+        velocity_surface = font.render(velocity_text, True, BLACK)
+        screen.blit(velocity_surface, (x, y))
+        y += velocity_surface.get_height() + 5
+        
+        # Render angle
+        angle_text = f"Angle: {record['angle']:.1f}°"
+        angle_surface = font.render(angle_text, True, BLACK)
+        screen.blit(angle_surface, (x, y))
+        y += angle_surface.get_height() + 5
+        
+        # Render gravity
+        gravity_text = f"Gravity: {record['gravity']:.2f} m/s²"
+        gravity_surface = font.render(gravity_text, True, BLACK)
+        screen.blit(gravity_surface, (x, y))
+        y += gravity_surface.get_height() + 20  # Extra space before next projectile
+
+
 # Main loop
 while running:
     dt = clock.tick(FPS) / 1000  # Delta time in seconds
@@ -213,13 +254,22 @@ while running:
                 projectile.record_current_trajectory = True
             if clean_button.is_clicked(event.pos):
                 recorded_trajectories.clear()
+                selected_trajectories.clear()
             for record in recorded_trajectories:
-                # check if the user wants to show/hide information
+                # Check if the user wants to show/hide information
                 if record["trajectory"]:
                     endpoint = record["trajectory"][-1]
                     if is_point_near(mouse_pos, endpoint):
                         # Toggle the display information flag
                         record["showing_information"] = not record["showing_information"]
+                        
+                        # Add or remove from selected_trajectories based on the flag
+                        if record["showing_information"]:
+                            if record not in selected_trajectories:
+                                selected_trajectories.append(record)
+                        else:
+                            if record in selected_trajectories:
+                                selected_trajectories.remove(record)
 
                 
 
@@ -234,7 +284,9 @@ while running:
             "initial_velocity": projectile.velocity,
             "angle": math.degrees(projectile.angle),
             "gravity": projectile.gravity,
-            "showing_information": False
+            "showing_information": False,
+            "time": projectile.time,
+            "distance": projectile.distance
         })
         projectile.record_current_trajectory = False  # Reset the recording fla
 
@@ -247,14 +299,11 @@ while running:
     for record in recorded_trajectories:
         for point in record["trajectory"]:
             pygame.draw.circle(screen, BLUE, point, 2)  # Use a different color for recorded trajectories
-        
-        if record["showing_information"]:
-            # Render and display the information only if showing_information is True
-            endpoint = record["trajectory"][-1]
-            info_text = f"Velocity: {record['initial_velocity']} m/s, Angle: {record['angle']:.1f}°, Gravity: {record['gravity']:.2f} m/s²"
-            text_surface = font.render(info_text, True, BLACK)
-            screen.blit(text_surface, (endpoint[0] + 10, endpoint[1] - 20))
     
+    # Rendering sidebar information
+    if selected_trajectories:
+        render_sidebar_information(screen, font, selected_trajectories)
+        
     # Rendering buttons 
     button_standard.draw()
     angle_plus_button.draw()
