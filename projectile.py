@@ -169,8 +169,9 @@ def is_point_near(point1, point2, distance_threshold=10):
 # Function to render selected projectiles' information in the right sidebar
 
 def render_sidebar_information(screen, font, selected_trajectories):
-    x = SCREEN_WIDTH - 250  # Starting x position on the right side
-    y = 50  # Starting y position
+    
+    x = SCREEN_WIDTH - 175  # Starting x position on the right side
+    y = 100  # Starting y position
 
     for idx, record in enumerate(selected_trajectories):
         record = selected_trajectories[idx]
@@ -178,43 +179,43 @@ def render_sidebar_information(screen, font, selected_trajectories):
         # Render endpoint label (e.g., "Projectile N") near the endpoint
         endpoint = record["trajectory"][-1]
         label_text = f"Proj: {idx + 1}"
-        label_surface = font.render(label_text, True, BLACK)
+        label_surface = font.render(label_text, True, BLUE)
         screen.blit(label_surface, (endpoint[0] + 10, endpoint[1] - 15))  # Offset to avoid overlap
         
         # Render the title of the projectile
         title_text = f"Projectile {idx + 1}"
-        title_surface = font.render(title_text, True, BLACK)
+        title_surface = font.render(title_text, True, BLUE)
         screen.blit(title_surface, (x, y))
         y += title_surface.get_height() + 5
         
         # Render initial velocity
         velocity_text = f"Velocity: {record['initial_velocity']} m/s"
-        velocity_surface = font.render(velocity_text, True, BLACK)
+        velocity_surface = font.render(velocity_text, True, BLUE)
         screen.blit(velocity_surface, (x, y))
         y += velocity_surface.get_height() + 5
         
         # Render angle
         angle_text = f"Angle: {record['angle']:.1f}°"
-        angle_surface = font.render(angle_text, True, BLACK)
+        angle_surface = font.render(angle_text, True, BLUE)
         screen.blit(angle_surface, (x, y))
         y += angle_surface.get_height() + 5
         
         # Render gravity
         gravity_text = f"Gravity: {record['gravity']:.2f} m/s²"
-        gravity_surface = font.render(gravity_text, True, BLACK)
+        gravity_surface = font.render(gravity_text, True, BLUE)
         screen.blit(gravity_surface, (x, y))
         y += gravity_surface.get_height() + 5  # Extra space before next projectile
         
         time_text = f"Time: {record['time']:.2f} s"
-        time_surface = font.render(time_text, True, BLACK)
+        time_surface = font.render(time_text, True, BLUE)
         screen.blit(time_surface, (x, y))
         y += time_surface.get_height() + 5  # Extra space before next projectile
 
         # Distance block
         distance_text = f"Distance: {record['distance']:.2f} m"
-        distance_surface = font.render(distance_text, True, BLACK)
+        distance_surface = font.render(distance_text, True, BLUE)
         screen.blit(distance_surface, (x, y))
-        y += distance_surface.get_height() + 20  # Extra space before next projectile
+        y += distance_surface.get_height() + 20  # Extra space before next projectile  
 
 # Main loop
 while running:
@@ -275,7 +276,7 @@ while running:
                         
                         # Add or remove from selected_trajectories based on the flag
                         if record["showing_information"]:
-                            if record not in selected_trajectories:
+                            if record not in selected_trajectories and len(selected_trajectories) < 3:
                                 selected_trajectories.append(record)
                         else:
                             if record in selected_trajectories:
