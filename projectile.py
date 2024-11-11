@@ -203,8 +203,18 @@ def render_sidebar_information(screen, font, selected_trajectories):
         gravity_text = f"Gravity: {record['gravity']:.2f} m/s²"
         gravity_surface = font.render(gravity_text, True, BLACK)
         screen.blit(gravity_surface, (x, y))
-        y += gravity_surface.get_height() + 20  # Extra space before next projectile
+        y += gravity_surface.get_height() + 5  # Extra space before next projectile
+        
+        time_text = f"Time: {record['time']:.2f} s"
+        time_surface = font.render(time_text, True, BLACK)
+        screen.blit(time_surface, (x, y))
+        y += time_surface.get_height() + 5  # Extra space before next projectile
 
+        # Distance block
+        distance_text = f"Distance: {record['distance']:.2f} m"
+        distance_surface = font.render(distance_text, True, BLACK)
+        screen.blit(distance_surface, (x, y))
+        y += distance_surface.get_height() + 20  # Extra space before next projectile
 
 # Main loop
 while running:
