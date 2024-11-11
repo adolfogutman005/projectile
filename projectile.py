@@ -153,15 +153,16 @@ projectile = Projectile(initial_x, initial_y, initial_velocity, initial_angle, g
 
 
 # defining buttons 
-button_standard = Button(10, 160, 150, 40, "Standard Values")
+button_standard = Button(10, 110, 150, 40, "Standard Values")
+record_button = Button(10, 155, 150, 40, "Record Trajectory")
+clean_button = Button(10, 200, 150, 40, "Clean Trajectories")
 angle_plus_button = Button(200, 10, 30, 30, "+")
 angle_minus_button = Button(240, 10, 30, 30, "-")
 velocity_plus_button = Button(200, 40, 30, 30, "+")
 velocity_minus_button = Button(240, 40, 30, 30, "-")
 gravity_plus_button = Button(200, 70, 30, 30, "+")
 gravity_minus_button = Button(240, 70, 30, 30, "-")
-record_button = Button(10, 200, 150, 40, "Record Trajectory")
-clean_button = Button(10, 240, 150, 40, "Clean Trajectories")
+
 
 def is_point_near(point1, point2, distance_threshold=10):
     return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2) <= distance_threshold
