@@ -269,8 +269,10 @@ while running:
                 selected_trajectories.clear()
             for record in recorded_trajectories:
                 # Check if the user wants to show/hide information
+                
                 if record["trajectory"]:
                     endpoint = record["trajectory"][-1]
+                    
                     if is_point_near(mouse_pos, endpoint):
                         # Toggle the display information flag
                         record["showing_information"] = not record["showing_information"]
@@ -309,8 +311,11 @@ while running:
     
     # Rendering trajectories
     for record in recorded_trajectories:
-        for point in record["trajectory"]:
-            pygame.draw.circle(screen, BLUE, point, 2)  # Use a different color for recorded trajectories
+        if record["trajectory"]:
+            endpoint = record["trajectory"][-1]
+            pygame.draw.circle(screen, BLUE, endpoint, 5)  # Red color, larger radius
+            for point in record["trajectory"]:
+                pygame.draw.circle(screen, BLUE, point, 2)  # Use a different color for recorded trajectories
     
     # Rendering sidebar information
     if selected_trajectories:
