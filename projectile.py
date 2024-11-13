@@ -203,9 +203,11 @@ while running:
             # reset the projectile 
             if event.key == pygame.K_r:
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
+                play_pause_button.text = "Pause" if projectile.in_motion else "Play"  # Update button symbol
             # Shoot the projectile with space bar
             if event.key == pygame.K_SPACE:
                 projectile.in_motion = not projectile.in_motion
+                play_pause_button.text = "Pause" if projectile.in_motion else "Play"  # Update button symbol
                     
         if event.type == pygame.MOUSEBUTTONDOWN:
             if angle_plus_button.is_clicked(event.pos):
