@@ -133,6 +133,7 @@ velocity_plus_button = Button(200, 40, 30, 30, "+")
 velocity_minus_button = Button(240, 40, 30, 30, "-")
 gravity_plus_button = Button(200, 70, 30, 30, "+")
 gravity_minus_button = Button(240, 70, 30, 30, "-")
+play_pause_button = Button(925, 10, 75, 30, "Play")
 
 
 def is_point_near(point1, point2, distance_threshold=10):
@@ -235,6 +236,10 @@ while running:
             if clean_button.is_clicked(event.pos):
                 recorded_trajectories.clear()
                 selected_trajectories.clear()
+            if play_pause_button.is_clicked(event.pos):
+                projectile.in_motion = not projectile.in_motion  # Toggle motion
+                play_pause_button.text = "Pause" if projectile.in_motion else "Play"  # Update button symbol
+            
             for record in recorded_trajectories:
                 # Check if the user wants to show/hide information
                 
@@ -298,6 +303,7 @@ while running:
     gravity_minus_button.draw()
     record_button.draw()
     clean_button.draw()
+    play_pause_button.draw()
 
     # Render Texts 
     angle_text = font.render(f"Angle: {projectile.angle * (180 / math.pi):.0f} degrees", True, BLACK)
