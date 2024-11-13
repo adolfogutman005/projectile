@@ -26,7 +26,6 @@ font = pygame.font.SysFont(None, 24)
 # UI elements
 launching = False
 running = True
-paused = False 
 recorded_trajectories = []
 selected_trajectories = []
 
@@ -74,6 +73,7 @@ class Projectile:
             if self.y >= GROUND_LEVEL:  
                 self.in_motion = False
                 self.y = GROUND_LEVEL  # Clamp y to ground level
+                self.in_motion = False
 
 
     def reset(self, x, y, velocity, angle, gravity):
@@ -204,10 +204,7 @@ while running:
                 projectile.reset(initial_x, initial_y, initial_velocity, initial_angle, gravity)
             # Shoot the projectile with space bar
             if event.key == pygame.K_SPACE:
-                projectile.in_motion = True
-            # Adjust pause button 
-            if event.key == pygame.K_p:
-                paused = not paused
+                projectile.in_motion = not projectile.in_motion
                     
         if event.type == pygame.MOUSEBUTTONDOWN:
             if angle_plus_button.is_clicked(event.pos):
@@ -259,8 +256,7 @@ while running:
                 
 
     # Update the projectile's motion
-    if not paused:
-        projectile.update(dt)
+    projectile.update(dt)
     
     # Save trajectory if button is clicked 
     if not projectile.in_motion and projectile.record_current_trajectory:
