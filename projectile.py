@@ -1,33 +1,4 @@
 
-
-
-# Class Projectile 
-
-# Constants
-
-# Standard initial values
-
-# velocity
-# x, y 
-# angle 
-# time 
-
-# Set up Pygame 
-
-# While game 
-    # Events 
-        # If user quits
-        # Reset 
-        # if user changes input (angle, x, y, etc.)
-        # if user shoots projectile 
-            # Get values  
-            # Update values with a loop (x, y, velocity) using math formulas 
-            # Graph projectile and Trajectorie point   
-    
-
-# Standard Values 
-
-
 import pygame
 import math
 
