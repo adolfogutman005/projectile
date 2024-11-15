@@ -1,19 +1,6 @@
-
 import pygame
 import math
-
-# Constants
-GRAVITY = 9.81  # m/s^2 (can be changed by the user)
-FPS = 60  # Frame rate
-SCREEN_WIDTH, SCREEN_HEIGHT = 1200, 600  # Screen dimensions
-GROUND_LEVEL = SCREEN_HEIGHT - 100  # Ground y-coordinate
-SCALE_FACTOR = 5
-
-# Colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
+from constants import * 
 
 
 # Set up Pygame
@@ -26,8 +13,6 @@ font = pygame.font.SysFont(None, 24)
 # UI elements
 launching = False
 running = True
-
-# Trajectories Lists 
 recorded_trajectories = []
 selected_trajectories = []
 
@@ -262,7 +247,12 @@ while running:
                             if record in selected_trajectories:
                                 selected_trajectories.remove(record)
 
-      # Save trajectory if button is clicked 
+                
+
+    # Update the projectile's motion
+    projectile.update(dt)
+    
+    # Save trajectory if button is clicked 
     if not projectile.in_motion and projectile.record_current_trajectory:
         recorded_trajectories.append({
             "trajectory": list(projectile.trajectory),
@@ -273,11 +263,7 @@ while running:
             "time": projectile.time,
             "distance": projectile.distance
         })
-        projectile.record_current_trajectory = False  # Reset the recording fla           
-
-    # Update the projectile's motion
-    projectile.update(dt)
-    
+        projectile.record_current_trajectory = False  # Reset the recording fla
 
     # Rendering Projectile 
     screen.fill(WHITE)  # Clear screen
@@ -316,11 +302,11 @@ while running:
     distance_text = font.render(f"Distance: {projectile.distance:.1f} meters", True, BLACK)
     velocity_text = font.render(f"Velocity: {-projectile.vy:.1f} m/s", True, BLACK)
     
+    
     # Buttons Text
     screen.blit(angle_text, (10, 20))
     screen.blit(initial_velocity_text, (10, 50))
     screen.blit(gravity_text, (10, 80))
-    
     # Info text
     screen.blit(time_text, (1025, 10))
     screen.blit(distance_text, (1025, 40))
