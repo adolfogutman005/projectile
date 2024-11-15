@@ -26,6 +26,8 @@ font = pygame.font.SysFont(None, 24)
 # UI elements
 launching = False
 running = True
+
+# Trajectories Lists 
 recorded_trajectories = []
 selected_trajectories = []
 
@@ -260,12 +262,7 @@ while running:
                             if record in selected_trajectories:
                                 selected_trajectories.remove(record)
 
-                
-
-    # Update the projectile's motion
-    projectile.update(dt)
-    
-    # Save trajectory if button is clicked 
+      # Save trajectory if button is clicked 
     if not projectile.in_motion and projectile.record_current_trajectory:
         recorded_trajectories.append({
             "trajectory": list(projectile.trajectory),
@@ -276,7 +273,11 @@ while running:
             "time": projectile.time,
             "distance": projectile.distance
         })
-        projectile.record_current_trajectory = False  # Reset the recording fla
+        projectile.record_current_trajectory = False  # Reset the recording fla           
+
+    # Update the projectile's motion
+    projectile.update(dt)
+    
 
     # Rendering Projectile 
     screen.fill(WHITE)  # Clear screen
@@ -315,11 +316,11 @@ while running:
     distance_text = font.render(f"Distance: {projectile.distance:.1f} meters", True, BLACK)
     velocity_text = font.render(f"Velocity: {-projectile.vy:.1f} m/s", True, BLACK)
     
-    
     # Buttons Text
     screen.blit(angle_text, (10, 20))
     screen.blit(initial_velocity_text, (10, 50))
     screen.blit(gravity_text, (10, 80))
+    
     # Info text
     screen.blit(time_text, (1025, 10))
     screen.blit(distance_text, (1025, 40))
